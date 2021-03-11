@@ -9,3 +9,16 @@ jobs:
     - php: nightly
   allow_failures:
     - php: nightly
+
+cache:
+  directories:
+    - $HOME/.composer
+
+before_install:
+  - composer self-update
+
+install:
+  - composer install
+
+script:
+  - make test
