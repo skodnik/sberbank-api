@@ -10,7 +10,7 @@
 ## Установка
 
 ```bash
-$ composer requare 'vlsv/sberbank-api'
+$ composer require 'vlsv/sberbank-api'
 ```
 
 ## Использование
