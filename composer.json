@@ -1,0 +1,42 @@
+{
+  "name": "vlsv/sberbank-api",
+  "type": "library",
+  "description": "SberBank CallbackNotification handler",
+  "keywords": [
+    "sberbank",
+    "callback",
+    "acquiring",
+    "api"
+  ],
+  "homepage": "https://github.com/skodnik/sberbank-api",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Evgeny Vlasov",
+      "email": "vlasov.evgeny@gmail.com",
+      "homepage": "https://vlsv.me/"
+    }
+  ],
+  "require": {
+    "php": "^7.4||^8",
+    "ext-json": "*",
+    "ext-openssl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Vlsv\\SberBankApi\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Vlsv\\SberBankApi\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "minimum-stability": "stable"
+}
