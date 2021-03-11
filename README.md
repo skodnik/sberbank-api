@@ -1,3 +1,5 @@
+[![Travis CI Build Status](https://travis-ci.org/skodnik/sberbank-api.svg?branch=main)](https://travis-ci.org/skodnik/sberbank-api)
+
 Обработчик [уведомлений обратного вызова платёжного шлюза СберБанка](https://securepayments.sberbank.ru/wiki/doku.php/integration:api:callback:start)
 
 ## Требования
@@ -17,7 +19,7 @@ $ composer require 'vlsv/sberbank-api'
 
 #### Уведомления без контрольной суммы
 
-Данный тип уведомлений содержит только сведения о заказе - потенциально продавец рискует принять уведомление, отправленное злоумышленником, за подлинное.
+Данный тип уведомлений содержит только сведения о заказе — потенциально продавец рискует принять уведомление, отправленное злоумышленником, за подлинное.
 
 ```php
 <?php
@@ -31,8 +33,9 @@ $payload_json = $_GET;
 try {
     $notification = new CallbackNotification($payload_json);
 } catch (\UnexpectedValueException $e) {
-    $exception_message = $e->getMessage();
+    exit($e->getMessage());
 }
+
 $order_number = $notification->getOrderNumber();
 
 if ($notification->isDeposited()) {
