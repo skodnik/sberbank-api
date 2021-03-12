@@ -118,6 +118,7 @@ class CallbackNotification
      */
     public function getCheckString(): string
     {
+        $check_string = '';
         $payload = $this->payload;
         unset($payload['checksum']);
         ksort($payload);
@@ -126,7 +127,7 @@ class CallbackNotification
             $check_string .= $key . ';' . $value . ';';
         }
 
-        return $check_string ?? '';
+        return $check_string;
     }
 
     /**
