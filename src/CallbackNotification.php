@@ -117,6 +117,11 @@ class CallbackNotification
         return $this->payload->$index ?? false;
     }
 
+    /**
+     * Проверяемая строка данных
+     *
+     * @return string
+     */
     public function getCheckString(): string
     {
         $check_string = '';
