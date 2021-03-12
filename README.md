@@ -28,22 +28,21 @@ use Vlsv\SberBankApi\CallbackNotification;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$payload_json = $_GET;
+// Массив значений полученный от платежного шлюза
+$payload = $_GET;
 
 try {
-    $notification = new CallbackNotification($payload_json);
+    $order = new CallbackNotification($payload);
 } catch (\UnexpectedValueException $e) {
     exit($e->getMessage());
 }
 
-$order_number = $notification->getOrderNumber();
-
-if ($notification->isDeposited()) {
-    echo 'Проведена полная авторизация суммы заказа ' . $order_number;
+if ($order->isDeposited()) {
+    echo 'Проведена полная авторизация суммы заказа ' . $order->getOrderNumber();
 }
 
-if ($notification->isRefunded()) {
-    echo 'По заказу ' . $order_number . ' была проведена операция возврата ';
+if ($order->isRefunded()) {
+    echo 'По заказу ' . $order->getOrderNumber() . ' была проведена операция возврата ';
 }
 ```
 
@@ -57,7 +56,7 @@ if ($notification->isRefunded()) {
 ```php
 $symmetric_private_key = 'symmetric private key';
 
-if ($notification->isSymmetricKeyValidationSuccessful($symmetric_private_key)) {
+if ($order->isSymmetricKeyValidationSuccessful($symmetric_private_key)) {
     echo 'Подлинность данных подтверждена';
 }
 ```
@@ -66,7 +65,7 @@ if ($notification->isSymmetricKeyValidationSuccessful($symmetric_private_key)) {
 ```php
 $asymmetric_public_key = 'asymmetric public key';
 
-if ($notification->isAsymmetricKeyValidationSuccessful($asymmetric_public_key)) {
+if ($order->isAsymmetricKeyValidationSuccessful($asymmetric_public_key)) {
     echo 'Подлинность данных подтверждена';
 }
 ```

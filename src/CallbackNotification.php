@@ -14,7 +14,7 @@ use UnexpectedValueException;
  */
 class CallbackNotification
 {
-    private $payload;
+    private array $payload;
 
     const OPERATION = [
         'approved',
@@ -25,21 +25,15 @@ class CallbackNotification
     ];
 
     public function __construct(
-        string $payload,
+        array $payload,
         bool $check_structure = true
     )
     {
-        $payload = json_decode($payload);
-
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new UnexpectedValueException('incorrect json');
-        }
-
         if ($check_structure && self::isStructureIncorrect($payload)) {
             throw new UnexpectedValueException('incorrect structure');
         }
 
-        if (!in_array($payload->operation, self::OPERATION)) {
+        if (!in_array($payload['operation'], self::OPERATION)) {
             throw new UnexpectedValueException('unknown operation');
         }
 
@@ -53,7 +47,7 @@ class CallbackNotification
      */
     public function getMdOrder(): string
     {
-        return $this->payload->mdOrder;
+        return $this->payload['mdOrder'];
     }
 
     /**
@@ -63,7 +57,7 @@ class CallbackNotification
      */
     public function getOrderNumber(): string
     {
-        return $this->payload->orderNumber;
+        return $this->payload['orderNumber'];
     }
 
     /**
@@ -73,7 +67,7 @@ class CallbackNotification
      */
     public function getChecksum(): string
     {
-        return $this->payload->checksum ?? '';
+        return $this->payload['checksum'] ?? '';
     }
 
     /**
@@ -88,7 +82,7 @@ class CallbackNotification
      */
     public function getOperation(): string
     {
-        return $this->payload->operation;
+        return $this->payload['operation'];
     }
 
     /**
@@ -99,22 +93,22 @@ class CallbackNotification
      */
     public function getStatus(): bool
     {
-        return (bool)$this->payload->status;
+        return (bool)$this->payload['status'];
     }
 
     /**
      * Переменная определенная настройками аккаунта Сбербанк
      *
      * @param $index
-     * @return false
+     * @return string
      */
-    public function getValueOrException($index)
+    public function getValueOrException($index): string
     {
-        if (!isset($this->payload->$index) || !$this->payload->$index) {
+        if (!isset($this->payload[$index])) {
             throw new UnexpectedValueException('index does not exist');
         }
 
-        return $this->payload->$index ?? false;
+        return $this->payload[$index];
     }
 
     /**
@@ -124,8 +118,7 @@ class CallbackNotification
      */
     public function getCheckString(): string
     {
-        $check_string = '';
-        $payload = (array)$this->payload;
+        $payload = $this->payload;
         unset($payload['checksum']);
         ksort($payload);
 
@@ -133,7 +126,7 @@ class CallbackNotification
             $check_string .= $key . ';' . $value . ';';
         }
 
-        return $check_string;
+        return $check_string ?? '';
     }
 
     /**
@@ -179,19 +172,19 @@ class CallbackNotification
     /**
      * Проверка корректности структуры переданного json
      *
-     * @param \stdClass $payload
+     * @param array $payload
      * @return bool
      */
-    private function isStructureIncorrect(\stdClass $payload): bool
+    private function isStructureIncorrect(array $payload): bool
     {
-        return !isset($payload->mdOrder) ||
-            !$payload->mdOrder ||
-            !isset($payload->orderNumber) ||
-            !$payload->orderNumber ||
-            !isset($payload->operation) ||
-            !$payload->operation ||
-            !isset($payload->status) ||
-            ($payload->status != '0' && $payload->status != '1');
+        return !isset($payload['mdOrder']) ||
+            $payload['mdOrder'] == '' ||
+            !isset($payload['orderNumber']) ||
+            $payload['orderNumber'] == '' ||
+            !isset($payload['operation']) ||
+            $payload['operation'] == '' ||
+            !isset($payload['status']) ||
+            ($payload['status'] != '0' && $payload['status'] != '1');
     }
 
     /**
