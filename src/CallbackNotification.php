@@ -144,7 +144,7 @@ class CallbackNotification
 
         $hmac = hash_hmac('sha256', $this->getCheckString(), $symmetric_private_key);
 
-        return $hmac === $this->getChecksum();
+        return strtoupper($hmac) === strtoupper($this->getChecksum());
     }
 
     /**
